@@ -101,3 +101,33 @@ class SteamdealsscraperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+import undetected_chromedriver as uc
+from scrapy.http import HtmlResponse
+
+class SeleniumMiddleWare(object):
+
+    def __init__(self):
+        options = uc.ChromeOptions()
+        options.add_argument("--headless=new")  # Activa el modo headless correctamente
+        chrome_prefs = {}
+        options.experimental_options["prefs"] = chrome_prefs
+        chrome_prefs["profile.default_content_settings"] = {"images": 2}
+        chrome_prefs["profile.managed_default_content_settings"] = {"images": 2}
+        self.driver = uc.Chrome(options=options, use_subprocess=True)
+       
+    def process_request(self, request, spider):
+        try:
+            self.driver.get(request.url)
+        except:
+            pass
+        content = self.driver.page_source
+
+        return HtmlResponse(request.url, encoding='utf-8', body=content, request=request)
+
+    def close_spider(self, spider):
+        self.driver.quit()
+
+  
+

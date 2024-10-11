@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = "SteamDealsScraper.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "SteamDealsScraper (+http://www.yourdomain.com)"
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -53,6 +53,9 @@ ROBOTSTXT_OBEY = True
 #DOWNLOADER_MIDDLEWARES = {
 #    "SteamDealsScraper.middlewares.SteamdealsscraperDownloaderMiddleware": 543,
 #}
+DOWNLOADER_MIDDLEWARES = {
+    'SteamDealsScraper.middlewares.SeleniumMiddleWare': 491
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
