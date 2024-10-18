@@ -54,7 +54,7 @@ ROBOTSTXT_OBEY = True
 #    "SteamDealsScraper.middlewares.SteamdealsscraperDownloaderMiddleware": 543,
 #}
 DOWNLOADER_MIDDLEWARES = {
-    'SteamDealsScraper.middlewares.SeleniumMiddleWare': 491
+     'SteamDealsScraper.middlewares.SeleniumMiddleWare': 491
 }
 
 # Enable or disable extensions
@@ -94,3 +94,12 @@ DOWNLOADER_MIDDLEWARES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+
+
+from shutil import which
+
+SELENIUM_DRIVER_NAME = 'chrome'
+SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')  # Asegúrate de tener el chromedriver instalado y en PATH
+SELENIUM_DRIVER_ARGUMENTS = ['--headless']  # Otras opciones que quieras agregar, como '--headless' para ejecutar sin interfaz gráfica
+

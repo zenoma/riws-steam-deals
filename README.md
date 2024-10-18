@@ -12,6 +12,8 @@ Instalación de Selenium y google chrome
 
 ``` bash
 pip3 install selenium undetected-chromedriver
+pip3 install scrapy-selenium
+pip3 install webdriver-manager
 
 sudo apt update
 sudo apt install google-chrome-stable
@@ -33,8 +35,11 @@ unzip chrome-linux.zip
 
 ## Actualización de la base de datos (Scrapper)
 
+Primero nos movemos al directorio SteamDealsScraper.
 Para actualizar los datos es necesario ejecutar el siguiente comando que obtendrá los datos de la página web y los volcará a un archivo .json
 
 ``` bash
+cd SteamDealsScraper
+
 scrapy crawl steam_spider -O games.json
 ```
