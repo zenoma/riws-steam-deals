@@ -14,7 +14,6 @@ class SteamDealsSpider(scrapy.Spider):
     def start_requests(self):
         # Configure Chrome options
         chrome_options = Options()
-        chrome_options.add_argument("--window-size=1920x1080")
         chrome_options.add_argument("--headless")  # Run Chrome in headless mode
 
         # Set the path to your ChromeDriver
@@ -67,19 +66,36 @@ class SteamDealsSpider(scrapy.Spider):
             url = game.css('::attr(href)').get()
             app_id = game.css('::attr(data-ds-appid)').get()
             release_date = game.css('div.search_released::text').get()
-            review_score = game.css('span.search_review_summary::attr(data-tooltip-html)').get()
-            final_price = game.css('div.discount_final_price::text').get()
+            review_summary = game.css('span.search_review_summary::attr(data-tooltip-html)').get()
             original_price = game.css('div.discount_original_price::text').get()
             discount_pct = game.css('div.discount_pct::text').get()
+            final_price = game.css('div.discount_final_price::text').get()
+            img_url = game.css('div.search_capsule img::attr(src)').get()
+
+            # TODO: Mejorar positive_review_pct
+            if review_summary:
+                review_text = Selector(text=review_summary).css('::text').getall()
+                positive_review_pct = review_text[1] if len(review_text) > 1 else None
+                review_count = review_text[-1] if len(review_text) > 2 else None
+            else:
+                positive_review_pct = None
+                review_count = None
 
             yield {
                 'title': title.strip() if title else None,
                 'url': url.strip() if url else None,
                 'app_id': app_id.strip() if app_id else None,
                 'release_date': release_date.strip() if release_date else None,
-                'review_score': review_score.strip() if review_score else None,
-                'final_price': final_price.strip() if final_price else None,
+                'review_summary': review_summary.strip() if review_summary else None,
+                'positive_review_pct': positive_review_pct,
+                'review_count': review_count,
                 'original_price': original_price.strip() if original_price else None,
                 'discount_pct': discount_pct.strip() if discount_pct else None,
+                'final_price': final_price.strip() if final_price else None,
+                # TODO: Cambiar capsule_sm_120 por header en la url
+                'img_url': img_url
             }
+
+
+
 
