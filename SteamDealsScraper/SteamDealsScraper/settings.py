@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Scrapy settings for SteamDealsScraper project
 #
 # For simplicity, this file contains only settings considered important or
@@ -7,14 +9,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "SteamDealsScraper"
+BOT_NAME = 'SteamDealsScraper'
 
-SPIDER_MODULES = ["SteamDealsScraper.spiders"]
-NEWSPIDER_MODULE = "SteamDealsScraper.spiders"
+SPIDER_MODULES = ['SteamDealsScraper.spiders']
+NEWSPIDER_MODULE = 'SteamDealsScraper.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'
+#USER_AGENT = 'SteamDealsScraper (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -38,35 +40,32 @@ ROBOTSTXT_OBEY = True
 
 # Override the default request headers:
 #DEFAULT_REQUEST_HEADERS = {
-#    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#    "Accept-Language": "en",
+#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+#   'Accept-Language': 'en',
 #}
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    "SteamDealsScraper.middlewares.SteamdealsscraperSpiderMiddleware": 543,
+#    'SteamDealsScraper.middlewares.SeleniumDemoSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "SteamDealsScraper.middlewares.SteamdealsscraperDownloaderMiddleware": 543,
-#}
-DOWNLOADER_MIDDLEWARES = {
-     'SteamDealsScraper.middlewares.SeleniumMiddleWare': 491
-}
+# DOWNLOADER_MIDDLEWARES = {
+#    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 100,
+# }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
+#    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    "SteamDealsScraper.pipelines.SteamdealsscraperPipeline": 300,
+#    'SteamDealsScraper.pipelines.SeleniumDemoPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -86,20 +85,6 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 #HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = "httpcache"
+#HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
-
-# Set settings whose default value is deprecated to a future-proof value
-REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
-FEED_EXPORT_ENCODING = "utf-8"
-
-
-
-from shutil import which
-
-SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')  # Asegúrate de tener el chromedriver instalado y en PATH
-SELENIUM_DRIVER_ARGUMENTS = ['--headless']  # Otras opciones que quieras agregar, como '--headless' para ejecutar sin interfaz gráfica
-
+#HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'

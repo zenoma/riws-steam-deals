@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Define here the models for your spider middleware
 #
 # See documentation in:
@@ -5,11 +7,8 @@
 
 from scrapy import signals
 
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
 
-
-class SteamdealsscraperSpiderMiddleware:
+class SteamDealsScraperSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -32,7 +31,7 @@ class SteamdealsscraperSpiderMiddleware:
         # Called with the results returned from the Spider, after
         # it has processed the response.
 
-        # Must return an iterable of Request, or item objects.
+        # Must return an iterable of Request, dict or Item objects.
         for i in result:
             yield i
 
@@ -40,7 +39,8 @@ class SteamdealsscraperSpiderMiddleware:
         # Called when a spider or process_spider_input() method
         # (from other spider middleware) raises an exception.
 
-        # Should return either None or an iterable of Request or item objects.
+        # Should return either None or an iterable of Request, dict
+        # or Item objects.
         pass
 
     def process_start_requests(self, start_requests, spider):
@@ -53,10 +53,10 @@ class SteamdealsscraperSpiderMiddleware:
             yield r
 
     def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
+        spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class SteamdealsscraperDownloaderMiddleware:
+class SteamDealsScraperDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -100,34 +100,4 @@ class SteamdealsscraperDownloaderMiddleware:
         pass
 
     def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
-
-
-import undetected_chromedriver as uc
-from scrapy.http import HtmlResponse
-
-class SeleniumMiddleWare(object):
-
-    def __init__(self):
-        options = uc.ChromeOptions()
-        options.add_argument("--headless=new")  # Activa el modo headless correctamente
-        chrome_prefs = {}
-        options.experimental_options["prefs"] = chrome_prefs
-        chrome_prefs["profile.default_content_settings"] = {"images": 2}
-        chrome_prefs["profile.managed_default_content_settings"] = {"images": 2}
-        self.driver = uc.Chrome(options=options, use_subprocess=True)
-       
-    def process_request(self, request, spider):
-        try:
-            self.driver.get(request.url)
-        except:
-            pass
-        content = self.driver.page_source
-
-        return HtmlResponse(request.url, encoding='utf-8', body=content, request=request)
-
-    def close_spider(self, spider):
-        self.driver.quit()
-
-  
-
+        spider.logger.info('Spider opened: %s' % spider.name)
