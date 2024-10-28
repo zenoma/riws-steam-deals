@@ -24,11 +24,15 @@ Instalación de ChromeLinux para desarrolladores.
 
 ``` bash
 # Mover el archivo descargado a /usr/local/bin/
-mv chrome-linux.zip /usr/local/bin/
+wget https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.69/linux64/chromedriver-linux64.zip
+sudo unzip chromedriver-linux64.zip -d /usr/local/bin/
+sudo chmod +x /usr/local/bin/chromedriver
 
-# Descomprimir el archivo
-cd /usr/local/bin/
-unzip chrome-linux.zip
+#IMPORTANTE: chromedriver debe estar en /usr/local/bin/
+
+# Añadimos la carpeta al PATH
+export PATH="$PATH:/usr/local/bin"
+
 ```
 
 # Ejecución
