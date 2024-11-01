@@ -1,5 +1,5 @@
 # Introducción
-Este proyecto consiste en obtener los datos de ofertas de la siguiente página: [Steam]('https://store.steampowered.com/search/?specials=1')
+Este proyecto consiste en obtener los datos de ofertas de la siguiente página: [Steam](https://store.steampowered.com/search/?specials=1)
 
 Estos datos son guardados en un índice de Elasticsearch, que es consultado por un _frontend_ en React para mostrar y manejar dichos datos.
 

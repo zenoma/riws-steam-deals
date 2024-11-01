@@ -1,4 +1,5 @@
 import scrapy
+import re
 from time import sleep
 from scrapy.selector import Selector
 from selenium import webdriver
@@ -75,14 +76,14 @@ class SteamDealsSpider(scrapy.Spider):
         img_url = game.css('div.search_capsule img::attr(src)').get()
 
         # Parse the review summary to get positive review percentage and review count
-        positive_review_pct, review_count = self.parse_review_summary(review_summary)
+        summary_text, positive_review_pct, review_count = self.parse_review_summary(review_summary)
 
         return {
             'title': title.strip() if title else None,
             'url': url.strip() if url else None,
             'app_id': app_id.strip() if app_id else None,
             'release_date': release_date.strip() if release_date else None,
-            'review_summary': review_summary.strip() if review_summary else None,
+            'review_summary': summary_text,
             'positive_review_pct': positive_review_pct,
             'review_count': review_count,
             'original_price': original_price.strip() if original_price else None,
@@ -92,14 +93,23 @@ class SteamDealsSpider(scrapy.Spider):
         }
 
     def parse_review_summary(self, review_summary):
-        """Extract positive review percentage and review count from the review summary tooltip."""
-        if review_summary:
-            review_text = Selector(text=review_summary).css('::text').getall()
-            positive_review_pct = review_text[1] if len(review_text) > 1 else None
-            review_count = review_text[-1] if len(review_text) > 2 else None
-        else:
-            positive_review_pct = None
-            review_count = None
-
-        return positive_review_pct, review_count
-
+            """Extract review summary text, positive review percentage, and review count from the tooltip."""
+            if review_summary:
+                # Extración de las palabras antes de salto de línea
+                summary_text_match = re.search(r'^(.*?)<br>', review_summary)
+                summary_text = summary_text_match.group(1) if summary_text_match else None
+    
+                # Extrae el porcentaje positivo y el recuento de reseñas usando expresiones regulares
+                percentage_match = re.search(r'(\d+)%', review_summary)
+                count_match = re.search(r'(\d[\d,]*) user reviews', review_summary)
+    
+                positive_review_pct = percentage_match.group(1) if percentage_match else None
+                review_count = count_match.group(1).replace(',', '') if count_match else None  
+    
+            else:
+                summary_text = None
+                positive_review_pct = None
+                review_count = None
+    
+            return summary_text, positive_review_pct, review_count
+    
