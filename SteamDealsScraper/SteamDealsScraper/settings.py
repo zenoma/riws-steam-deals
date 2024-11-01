@@ -68,6 +68,10 @@ ROBOTSTXT_OBEY = True
 #    'SteamDealsScraper.pipelines.SeleniumDemoPipeline': 300,
 #}
 
+ITEM_PIPELINES = {
+    'SteamDealsScraper.pipelines.ElasticsearchPipeline': 300,
+}
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

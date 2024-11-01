@@ -35,15 +35,44 @@ export PATH="$PATH:/usr/local/bin"
 
 ```
 
-# Ejecución
-
-## Actualización de la base de datos (Scrapper)
-
-Primero nos movemos al directorio SteamDealsScraper.
-Para actualizar los datos es necesario ejecutar el siguiente comando que obtendrá los datos de la página web y los volcará a un archivo .json
+## Elasticsearch
+Primero instalaremos la librería necesaria para usar Elasticsearch con Python
 
 ``` bash
-cd SteamDealsScraper
+pip install elasticsearch
 
-scrapy crawl steam_spider -O games.json
+```
+
+A continuación instalaremos el servidor de Elasticsearch para poder enviar información e indexarla.
+``` bash
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.15.3-linux-x86_64.tar.gz
+tar -xzf elasticsearch-8.15.3-linux-x86_64.tar.gz
+cd elasticsearch-8.15.3/
+```
+
+Es importante una vez instalado realizar los siguientes cambios en el fichero de configuración _elasticsearch.yml_
+```
+xpack.security.enabled: false 
+xpack.security.enrollment.enabled: false
+```
+
+# Ejecución
+
+## 1. Levantar el servidor de Elasticsearch
+
+Nos dirigimos a la carpeta de Elasticsearch y ejecutamos el servidor que almacenará los índices y los datos.
+
+``` bash
+./elasticsearch-8.15.3/bin/elasticsearch
+```
+
+## 2. Actualización de la base de datos (Scrapper)
+
+Nos dirigimos al directorio de SteamsDealsScraper
+Para actualizar los datos es necesario ejecutar el siguiente comando que obtendrá los datos de la página web y los enviará al servidor de Elasticsearch
+
+``` bash
+cd riws-steam-deals/SteamDealsScraper/SteamDealsScraper/
+
+scrapy crawl steam_spider
 ```

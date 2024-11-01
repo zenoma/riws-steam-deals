@@ -89,7 +89,7 @@ class SteamDealsSpider(scrapy.Spider):
             'original_price': original_price.strip() if original_price else None,
             'discount_pct': discount_pct.strip() if discount_pct else None,
             'final_price': final_price.strip() if final_price else None,
-            'img_url': img_url
+            'img_url': self.replace_img_name(img_url)
         }
 
     def parse_review_summary(self, review_summary):
@@ -110,6 +110,9 @@ class SteamDealsSpider(scrapy.Spider):
                 summary_text = None
                 positive_review_pct = None
                 review_count = None
-    
             return summary_text, positive_review_pct, review_count
-    
+
+    def replace_img_name(self, img_url):
+        """Change the name of the file that contains the image"""
+        return img_url.replace("capsule_sm_120", "header")
+
