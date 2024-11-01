@@ -54,6 +54,20 @@ Es importante una vez instalado realizar los siguientes cambios en el fichero de
 ```
 xpack.security.enabled: false 
 xpack.security.enrollment.enabled: false
+
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+```
+
+
+## React
+
+Para la parte del frontend es necesario tener una versión de node instalado. (>= 22.9)
+Una vez instalado ejecutamos el siguiente comando para obtener todas las dependencias necesarias
+
+``` bash
+npm install
 ```
 
 # Ejecución
@@ -76,3 +90,12 @@ cd riws-steam-deals/SteamDealsScraper/SteamDealsScraper/
 
 scrapy crawl steam_spider
 ```
+
+## 3. Levantar el front end
+
+Nos dirigimos a la carpeta de Elasticsearch y ejecutamos el servidor que almacenar├í los ├¡ndices y los datos.
+
+``` bash
+npm start
+```
+
