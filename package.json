@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@appbaseio/reactivesearch": "^4.2.2",
-    "@elastic/elasticsearch": "^8.15.1"
-  }
-}
