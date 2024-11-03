@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const Search = () => {
@@ -13,7 +13,7 @@ const Search = () => {
         },
         data: {
           query: {
-            match: { title: query } // Ajustar según el campo de búsqueda
+            match: { title: query }
           }
         }
       });
@@ -23,27 +23,33 @@ const Search = () => {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     fetchResults();
   };
 
   return (
     <div>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Buscar ofertas..."
-      />
-      <button onClick={handleSearch}>Buscar</button>
-      <ul>
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button type="submit">Buscar</button>
+      </form>
+
+      <div>
         {results.map((item) => (
-          <li key={item._id}>{item._source.title} - {item._source.price}</li> // Ajustar según los campos que tenga en el índice
+          <div key={item._id}>
+            <h3>{item._source.title}</h3>
+            <p>{item._source.description}</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
 
 export default Search;
-
