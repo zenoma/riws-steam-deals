@@ -1,0 +1,46 @@
+.search-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.search-input {
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+.results-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.results-table img {
+  width: 460px; /* Ancho fijo de 460 píxeles */
+  height: 215px; /* Alto fijo de 215 píxeles */
+  object-fit: cover; /* Recorta la imagen para llenar el contenedor sin distorsionar */
+  border-radius: 4px; /* Opcional: para bordes redondeados */
+}
+
