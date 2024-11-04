@@ -6,17 +6,11 @@ const useElasticSearch = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const search = async (query) => {
-        if (!query) {
-            alert("Por favor, ingresa un término de búsqueda.");
-            return;
-        }
-
+    const search = async (query, filters) => {
         setLoading(true);
         setError(null);
-
         try {
-            const data = await searchGames(query);
+            const data = await searchGames(query, filters);
             setResults(data);
         } catch (err) {
             setError(err);

@@ -1,15 +1,25 @@
-// src/components/Search.js
 import React, { useState } from 'react';
 import useElasticSearch from '../../hooks/useElasticSearch';
-import './Search.css'; // Estilos espec�ficos del componente
-import '../../App.css'; // Estilos generales de la aplicaci�n
+import './Search.css';
+import '../../App.css';
 
 const Search = () => {
   const [query, setQuery] = useState('');
+  const [minPositiveReviewPct, setMinPositiveReviewPct] = useState('');
+  const [minReviewCount, setMinReviewCount] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+
   const { results, loading, error, search } = useElasticSearch();
 
   const handleSearch = () => {
-    search(query);
+    const filters = {
+      minPositiveReviewPct: minPositiveReviewPct ? parseInt(minPositiveReviewPct, 10) : null,
+      minReviewCount: minReviewCount ? parseInt(minReviewCount, 10) : null,
+      minPrice: minPrice ? parseFloat(minPrice) : null,
+      maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+    };
+    search(query, filters);
   };
 
   return (
@@ -23,6 +33,56 @@ const Search = () => {
           className="search-input"
         />
         <button onClick={handleSearch} className="search-button">Buscar</button>
+      </div>
+
+      <div className="filters">
+        <div className="filter">
+          <label htmlFor="minPositiveReviewPct">Mín. % Reseñas Positivas:</label>
+          <input
+            type="number"
+            id="minPositiveReviewPct"
+            value={minPositiveReviewPct}
+            onChange={(e) => setMinPositiveReviewPct(e.target.value)}
+            placeholder="Ej: 70"
+            min="0"
+            max="100"
+          />
+        </div>
+        <div className="filter">
+          <label htmlFor="minReviewCount">Mín. Número de Reseñas:</label>
+          <input
+            type="number"
+            id="minReviewCount"
+            value={minReviewCount}
+            onChange={(e) => setMinReviewCount(e.target.value)}
+            placeholder="Ej: 10"
+            min="0"
+          />
+        </div>
+        <div className="filter">
+          <label htmlFor="minPrice">Precio Mínimo:</label>
+          <input
+            type="number"
+            id="minPrice"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            placeholder="Ej: 10.00"
+            min="0"
+            step="0.01"
+          />
+        </div>
+        <div className="filter">
+          <label htmlFor="maxPrice">Precio Máximo:</label>
+          <input
+            type="number"
+            id="maxPrice"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            placeholder="Ej: 50.00"
+            min="0"
+            step="0.01"
+          />
+        </div>
       </div>
 
       {loading && <p className="loading-message">Cargando...</p>}
@@ -49,7 +109,7 @@ const Search = () => {
                   <img
                     src={result._source.img_url}
                     alt={result._source.title}
-                    style={{ width: '100px', height: 'auto', objectFit: 'cover' }} // Ajustar tama�o de imagen
+                    style={{ width: '100px', height: 'auto', objectFit: 'cover' }}
                   />
                 </td>
                 <td>{result._source.title}</td>
@@ -67,7 +127,7 @@ const Search = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7">No se encontraron resultados</td>
+              <td colSpan="8">No se encontraron resultados</td>
             </tr>
           )}
         </tbody>
@@ -77,3 +137,4 @@ const Search = () => {
 };
 
 export default Search;
+
