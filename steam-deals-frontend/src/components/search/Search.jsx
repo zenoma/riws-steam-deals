@@ -1,37 +1,13 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import useElasticSearch from '../../hooks/useElasticSearch';
 import './Search.css';
 
 const Search = () => {
-  const [results, setResults] = useState([]);
   const [query, setQuery] = useState('');
+  const { results, loading, error, search } = useElasticSearch();
 
-  const search = async () => {
-    if (!query) {
-      alert("Por favor, ingresa un término de búsqueda.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        'http://localhost:9200/steam_deals/_search',
-        {
-          query: {
-            wildcard: {
-              title: `*${query.toLowerCase()}*`,
-            },
-          },
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      setResults(response.data.hits.hits);
-    } catch (error) {
-      console.error('Error fetching data from Elasticsearch', error);
-    }
+  const handleSearch = () => {
+    search(query);
   };
 
   return (
@@ -43,7 +19,11 @@ const Search = () => {
         onChange={(e) => setQuery(e.target.value)}
         className="search-input"
       />
-      <button onClick={search} className="search-button">Buscar</button>
+      <button onClick={handleSearch} className="search-button">Buscar</button>
+
+      {loading && <p>Cargando...</p>}
+      {error && <p>Error al buscar: {error.message}</p>}
+
       <table className="results-table">
         <thead>
           <tr>
@@ -62,9 +42,9 @@ const Search = () => {
               <tr key={result._id}>
                 <td>
                   <img
-                    src={result._source.img_url} // URL de la imagen
+                    src={result._source.img_url}
                     alt={result._source.title}
-                    style={{ width: '460px', height: '215px', objectFit: 'cover' }} // Aseg�rate de que esto se mantenga
+                    style={{ width: '460px', height: '215px', objectFit: 'cover' }}
                   />
                 </td>
                 <td>{result._source.title}</td>
@@ -84,8 +64,8 @@ const Search = () => {
               <td colSpan="7">No se encontraron resultados</td>
             </tr>
           )}
-        </tbody>      
-    </table>
+        </tbody>
+      </table>
     </div>
   );
 };
