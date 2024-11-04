@@ -1,46 +1,67 @@
+/* src/components/Search.css */
+
 .search-container {
+  max-width: 1200px;
+  margin: 20px auto;
   padding: 20px;
-  max-width: 800px;
-  margin: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: var(--color-secondary);
 }
 
 .search-input {
+  width: calc(100% - 100px); /* Espacio para el botón */
   padding: 10px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-light);
   border-radius: 4px;
+  font-size: 16px;
+  color: black;
+  margin-right: 10px;
+  background-color: #fff; /* Fondo blanco para la entrada de texto */
 }
 
 .search-button {
-  padding: 10px 15px;
+  padding: 10px 20px;
   border: none;
-  background-color: #007bff;
-  color: white;
   border-radius: 4px;
+  background-color: var(--color-primary);
+  color: black;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .search-button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Color azul oscuro al pasar el mouse */
 }
 
 .results-table {
   width: 100%;
   margin-top: 20px;
-  border-collapse: collapse;
+  border-collapse: collapse; /* Elimina el espacio entre las celdas */
 }
 
 .results-table th,
 .results-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
   text-align: left;
+  border-bottom: 1px solid var(--color-light);
+}
+
+.results-table th {
+  background-color: var(--color-primary);
+  color: black;
 }
 
 .results-table img {
-  width: 460px; /* Ancho fijo de 460 píxeles */
-  height: 215px; /* Alto fijo de 215 píxeles */
-  object-fit: cover; /* Recorta la imagen para llenar el contenedor sin distorsionar */
-  border-radius: 4px; /* Opcional: para bordes redondeados */
+  border-radius: 4px; /* Bordes redondeados para las imágenes */
+}
+
+.error-message {
+  color: red; /* Mensajes de error en rojo */
+}
+
+.loading-message {
+  color: orange; /* Mensaje de carga en naranja */
 }
 

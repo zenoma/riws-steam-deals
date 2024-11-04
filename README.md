@@ -93,9 +93,8 @@ scrapy crawl steam_spider
 
 ## 3. Levantar el front end
 
-Nos dirigimos a la carpeta de Elasticsearch y ejecutamos el servidor que almacenar├í los ├¡ndices y los datos.
-
+Nos dirigimos a la carpeta que contiene el frontend y ejecutamos el siguiente comando para levantar el frontend.
 ``` bash
-npm start
+npm run dev
 ```
 
