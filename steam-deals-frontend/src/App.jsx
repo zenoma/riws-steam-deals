@@ -1,14 +1,17 @@
-import Search from './components/search/Search';
+import React from "react";
+import "@elastic/react-search-ui-views/lib/styles/styles.css";
+import { SearchProvider, WithSearch } from "@elastic/react-search-ui";
+import config from "./config";
+import SearchLayout from "./components/SearchLayout";
+import "./App.css";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <h1>Buscador de Ofertas de Steam</h1>
-      <Search />
-    </div>
+    <SearchProvider config={config}>
+      <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
+        {({ wasSearched }) => <SearchLayout wasSearched={wasSearched} />}
+      </WithSearch>
+    </SearchProvider>
   );
-
 }
-export default App
-
 

@@ -14,7 +14,7 @@ class SteamDealsSpider(scrapy.Spider):
     def start_requests(self):
         driver = self.setup_driver()
         driver.get(self.start_urls[0])
-        sleep(5)  # Wait for the page to load
+        sleep(5)
         page_source = self.scroll_to_load(driver)
         driver.quit()
 
@@ -49,7 +49,6 @@ class SteamDealsSpider(scrapy.Spider):
     def parse(self, response):
         page_source = response.meta['page_source']
         
-        # Optionally save the page source for debugging
         self.save_page_source(page_source)
 
         scrapy_selector = Selector(text=page_source)
@@ -64,42 +63,74 @@ class SteamDealsSpider(scrapy.Spider):
             f.write(page_source)
 
     def extract_game_data(self, game):
-        """Extract and clean data from each game element."""
-        title = game.css('span.title::text').get()
-        url = game.css('::attr(href)').get()
-        app_id = game.css('::attr(data-ds-appid)').get()
-        release_date = game.css('div.search_released::text').get()
-        review_summary = game.css('span.search_review_summary::attr(data-tooltip-html)').get()
-        original_price = game.css('div.discount_original_price::text').get()
-        discount_pct = game.css('div.discount_pct::text').get()
-        final_price = game.css('div.discount_final_price::text').get()
-        img_url = game.css('div.search_capsule img::attr(src)').get()
+         """Extract and clean data from each game element."""
+         title = game.css('span.title::text').get()
+         url = game.css('::attr(href)').get()
+         app_id = game.css('::attr(data-ds-appid)').get()
+         release_date = game.css('div.search_released::text').get()
+         review_summary = game.css('span.search_review_summary::attr(data-tooltip-html)').get()
+         original_price = game.css('div.discount_original_price::text').get()
+         discount_pct = game.css('div.discount_pct::text').get()
+         final_price_str = game.css('div.discount_final_price::text').get()
+         
+         if final_price_str and final_price_str.lower() != 'free':
+             final_price_clean = final_price_str[:-1].replace(',', '.').strip()
+             try:
+                 final_price_clean = float(final_price_clean)
+             except ValueError:
+                 final_price_clean = None
+         elif final_price_str and final_price_str.lower() == 'free':
+             final_price_clean = 0.0
+         else:
+             final_price_clean = None
 
-        # Parse the review summary to get positive review percentage and review count
-        summary_text, positive_review_pct, review_count = self.parse_review_summary(review_summary)
+         if discount_pct:
+             discount_pct_clean = discount_pct.replace('%', '').strip()
+             try:
+                 discount_pct_clean = int(discount_pct_clean)  
+             except ValueError:
+                 discount_pct_clean = None
+         else:
+             discount_pct_clean = None
+         
+         if release_date:
+             release_parts = release_date.split(',')  
+             if len(release_parts) == 2:
+                 day_month = release_parts[0].strip()  
+                 year = release_parts[1].strip()  
+             else:
+                 day_month = release_date.strip()  
+                 year = None
+         else:
+             day_month = None
+             year = None
 
-        return {
-            'title': title.strip() if title else None,
-            'url': url.strip() if url else None,
-            'app_id': app_id.strip() if app_id else None,
-            'release_date': release_date.strip() if release_date else None,
-            'review_summary': summary_text,
-            'positive_review_pct': positive_review_pct,
-            'review_count': review_count,
-            'original_price': original_price.strip() if original_price else None,
-            'discount_pct': discount_pct.strip() if discount_pct else None,
-            'final_price': final_price.strip() if final_price else None,
-            'img_url': self.replace_img_name(img_url)
-        }
-
+         img_url = game.css('div.search_capsule img::attr(src)').get()
+         
+         summary_text, positive_review_pct, review_count = self.parse_review_summary(review_summary)
+         
+         return {
+             'title': title.strip() if title else None,  
+             'url': url.strip() if url else None, 
+             'app_id': app_id.strip() if app_id else None,  
+             'release_day_month': day_month,  
+             'release_year': year,  
+             'review_summary': summary_text,
+             'positive_review_pct': positive_review_pct if positive_review_pct else None,  
+             'review_count': review_count if review_count else None,  
+             'original_price': original_price.strip() if original_price else None,  
+             'discount_pct': discount_pct_clean, 
+             'final_price': final_price_clean, 
+             'img_url': self.replace_img_name(img_url)  
+         }
+        
     def parse_review_summary(self, review_summary):
             """Extract review summary text, positive review percentage, and review count from the tooltip."""
             if review_summary:
-                # Extración de las palabras antes de salto de línea
+               
                 summary_text_match = re.search(r'^(.*?)<br>', review_summary)
                 summary_text = summary_text_match.group(1) if summary_text_match else None
     
-                # Extrae el porcentaje positivo y el recuento de reseñas usando expresiones regulares
                 percentage_match = re.search(r'(\d+)%', review_summary)
                 count_match = re.search(r'(\d[\d,]*) user reviews', review_summary)
     

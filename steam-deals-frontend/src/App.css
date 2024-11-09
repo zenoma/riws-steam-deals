@@ -1,23 +1,48 @@
 :root {
-  --color-background: #171a21; /* Color de fondo */
-  --color-primary: #66c0f4; /* Color primario para botones y enlaces */
-  --color-secondary: #1b2838; /* Color secundario para el contenedor */
-  --color-accent: #2a475e; /* Color de acento */
-  --color-light: #c7d5e0; /* Color de texto claro */
+  --color-background: #171a21;
+  /* Color de fondo */
+  --color-primary: #66c0f4;
+  /* Color primario para botones y enlaces */
+  --color-secondary: #1b2838;
+  /* Color secundario para el contenedor */
+  --color-accent: #2a475e;
+  /* Color de acento */
+  --color-light: #c7d5e0;
+  /* Color de texto claro */
+}
+
+.sui-layout-body {
+  background-color: var(--color-background);
+  color: var(--color-light);
+  font-family: arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 body {
+  margin: 0;
+  display: block;
+}
+
+.sui-result {
   background-color: var(--color-background);
-  color: var(--color-light);
-  font-family: Arial, sans-serif; 
-  margin: 0; 
-  padding: 0; 
-  height: 100vh; 
-  display: flex; 
-  flex-direction: column; 
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0; 
+.sui-result__title {
+  color: var(--color-primary);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
