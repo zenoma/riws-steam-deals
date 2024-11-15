@@ -1,9 +1,21 @@
 .custom-result {
   display: flex;
-  align-items: flex-start;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 800px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   background-color: var(--color-secondary);
+  margin: 10px;
+  padding: 10px;
+}
+
+.custom-result:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .result-image {

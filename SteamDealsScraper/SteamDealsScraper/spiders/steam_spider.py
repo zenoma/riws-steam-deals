@@ -30,7 +30,6 @@ class SteamDealsSpider(scrapy.Spider):
     def scroll_to_load(self, driver, scroll_pause_time=5, max_scroll=20):
         """Scroll the page to load more elements and return the final page source."""
         last_height = driver.execute_script("return document.body.scrollHeight")
-        elements_count = 0
 
         while max_scroll > 0:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -40,8 +39,6 @@ class SteamDealsSpider(scrapy.Spider):
                 break
             last_height = new_height
 
-            scrapy_selector = Selector(text=driver.page_source)
-            elements_count = len(scrapy_selector.css('a.search_result_row'))
             max_scroll -= 1
 
         return driver.page_source
