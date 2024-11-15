@@ -9,7 +9,7 @@ const SearchResults = () => (
     thumbnailField="img_url"
     shouldTrackClickThrough
     resultView={CustomResultView}
- />
+  />
 );
 
 export default SearchResults;
