@@ -11,7 +11,7 @@ const SearchLayout = ({ wasSearched }) => (
       header={<SearchHeader />}
       sideContent={<SearchSidebar />}
       bodyContent={<SearchResults />}
-      bodyHeader={<SearchPaging wasSearched={wasSearched} />}
+      bodyFooter={<SearchPaging wasSearched={wasSearched} />}
     />
   </ErrorBoundary>
 );

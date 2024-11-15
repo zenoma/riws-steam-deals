@@ -27,12 +27,12 @@ class SteamDealsSpider(scrapy.Spider):
         service = Service(executable_path='/usr/local/bin/chromedriver')
         return webdriver.Chrome(service=service, options=chrome_options)
 
-    def scroll_to_load(self, driver, scroll_pause_time=5, max_scroll=10, target_elements=200):
+    def scroll_to_load(self, driver, scroll_pause_time=5, max_scroll=20):
         """Scroll the page to load more elements and return the final page source."""
         last_height = driver.execute_script("return document.body.scrollHeight")
         elements_count = 0
 
-        while elements_count < target_elements and max_scroll > 0:
+        while max_scroll > 0:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             sleep(scroll_pause_time)
             new_height = driver.execute_script("return document.body.scrollHeight")
@@ -143,7 +143,13 @@ class SteamDealsSpider(scrapy.Spider):
                 review_count = None
             return summary_text, positive_review_pct, review_count
 
-    def replace_img_name(self, img_url):
-        """Change the name of the file that contains the image"""
-        return img_url.replace("capsule_sm_120", "header")
 
+    def replace_img_name(self, img_url):
+        """
+        Cambia el nombre del archivo de imagen de 'capsule_sm_120' a 'header'
+        """
+        pattern = r"(/apps/\d+/)(?:[a-f0-9]+/)?capsule_sm_120\.jpg"
+        replacement = r"\1header.jpg"
+        new_url = re.sub(pattern, replacement, img_url, flags=re.IGNORECASE)
+        
+        return new_url
