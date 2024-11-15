@@ -22,7 +22,7 @@ const config = {
       discount_pct: { raw: {} },
       final_price: { raw: {} },
       img_url: { raw: {} },
-    }
+    },
     search_fields: {
       title: {},
     },
