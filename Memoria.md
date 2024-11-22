@@ -1,3 +1,10 @@
+# Recuperación de la Información y Web Semántica - MUEI
+
+## Integrantes del Grupo
+
+- **Jesús Senra Paz** - <jesus.senra@udc.es>  
+- **Adrián García Vázquez** - <adrian.gvazquez@udc.es>
+
 # Memoria del Proyecto
 
 ## **1. Introducción**
@@ -97,7 +104,6 @@ El archivo `pipeline.py` contiene la clase `ElasticsearchPipeline`, que define l
 ### 3.1. Componentes principales
 
 Este método se ejecuta al inicio del scraping y tiene como propósito inicializar la conexión con Elasticsearch. Además, verifica si el índice llamado `steam_deals` ya existe en Elasticsearch. Si no existe, lo crea utilizando el método `create_index`.
-
 
 Define el esquema (mapping) para el índice `steam_deals` en Elasticsearch. Los campos incluidos son:
 
