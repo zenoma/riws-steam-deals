@@ -1,22 +1,39 @@
 :root {
   --color-background: #171a21;
-  /* Color de fondo */
   --color-primary: #66c0f4;
-  /* Color primario para botones y enlaces */
   --color-secondary: #1b2838;
-  /* Color secundario para el contenedor */
   --color-accent: #2a475e;
-  /* Color de acento */
-  --color-light: #c7d5e0;
-  /* Color de texto claro */
+  --color-light: #ffffff;
+  --color-text-static: #c7d5e0;
+  --color-text-dynamic: #66c0f4;
+  --color-final-price: #beee11;
+  --background-final-price: #4c6b22;
 }
 
 .sui-layout-body {
   background-color: var(--color-background);
-  color: var(--color-light);
   font-family: arial, sans-serif;
   margin: 0;
   padding: 0;
+}
+
+.sui-layout-body::after {
+  content: none;
+  height: 0;
+  background: linear-gradient(to bottom, #fcfcfc 0%, #f0f0f0 100%);
+}
+
+.sui-paging-info {
+  color: var(--color-primary);
+}
+
+.sui-results-per-page {
+  color: var(--color-primary)
+}
+
+
+.sui-multi-checkbox-facet {
+  color: var(--color-primary);
 }
 
 body {
