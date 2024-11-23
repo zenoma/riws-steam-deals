@@ -9,13 +9,13 @@
 
 ## **1. Introducción**
 
-El objetivo de este proyecto fue crear un sistema que permita obtener ofertas de juegos de la plataforma Steam mediante scraping web, almacenar dicha información en un índice de Elasticsearch y exponerla a través de un frontend en React. Esto permite explorar, buscar, y visualizar los datos, además de implementar funcionalidades adicionales como recomendaciones y agrupación de resultados.
+El objetivo de este proyecto fue crear un sistema que permita obtener ofertas de juegos de la plataforma [Steam](https://store.steampowered.com/search/?specials=1) mediante scraping web, almacenar dicha información en un índice de Elasticsearch y exponerla a través de un frontend en React. Esto permite explorar, buscar, y visualizar los datos, además de implementar funcionalidades adicionales como recomendaciones y agrupación de resultados.
 
 ## **2. Descripción del Scraper**
 
 ### **2.1. Configuración y Estructura**
 
-El script utiliza **Scrapy** junto con **Selenium** para realizar scraping dinámico de la página de ofertas de Steam. Esto permite cargar contenido que se genera de forma asincrónica en la página, como las ofertas que aparecen al hacer scroll.
+El script utiliza **Scrapy** junto con **Selenium** para realizar scraping dinámico de la página de ofertas de Steam. Esto permite cargar contenido que se genera de forma asíncrona en la página, como las ofertas que aparecen al hacer scroll.
 
 - **Configuración del navegador:**
   - Se configura Selenium para operar en modo headless (sin interfaz gráfica).
@@ -23,6 +23,8 @@ El script utiliza **Scrapy** junto con **Selenium** para realizar scraping diná
 
 - **Carga de contenido:**
   - El método `scroll_to_load` simula el desplazamiento en la página para cargar todas las ofertas disponibles dinámicamente, deteniéndose cuando ya no hay más elementos que cargar o se alcanza un límite.
+  - Al principio lo habíamos configurado para que se obtuviera un máximo de 200 elementos, pero más adelante eliminamos ese límite, agregando otro: límite de scrolls.
+  - Esto fue necesario pues los datos apareceían en la página mediante un scroll infinito y para efectos de la práctica se ha considerado un límite.
 
 - **Extracción de datos:**
   - Una vez cargada la página, su contenido se procesa con **Scrapy Selector** para obtener información de cada oferta.
@@ -58,6 +60,7 @@ De cada juego se extraen los siguientes datos clave:
 
 4. **URLs de imágenes:**
    - Se reemplaza la imagen de cápsula pequeña por la imagen de encabezado del juego.
+   - Se ha encontrado que remplazando el nombre de la imagen por `header`  se obtiene una imagen de mayor calidad.
 
 5. **Fecha de lanzamiento:**
    - Se separan las partes de la fecha en día/mes y año.
@@ -91,10 +94,6 @@ El bloque principal del código se organiza en métodos que cumplen roles espec�
 - **`replace_img_name`:**
   - Cambia la URL de la imagen a una versión de encabezado más relevante.
 
-### **2.5. Consideraciones**
-
-Este enfoque combina la potencia de Scrapy para la extracción masiva de datos con las capacidades de Selenium para manejar contenido dinámico, logrando una cobertura completa de los elementos de la página.
-
 ---
 
 ## **3. Elasticsearch**
@@ -121,6 +120,8 @@ Define el esquema (mapping) para el índice `steam_deals` en Elasticsearch. Los 
 - `img_url` (text): URL de la imagen asociada al juego.
 - `timestamp` (date): Fecha y hora en que se registró el documento.
 
+Este mapping nos sirve más adelante en la parte del front, en concreto a la hora de los filtros `Facet`que nos ayuda a un filtrado más dinámico por parte del usuario.
+
 ### 3.2. Creación del índice en Elasticsearch
 
 - **Índices utilizados:**
@@ -129,21 +130,24 @@ Define el esquema (mapping) para el índice `steam_deals` en Elasticsearch. Los 
 
 - **Configuración del servidor:**
   - Se habilitó el acceso CORS para permitir consultas desde el frontend.
-  - La seguridad del servidor fue desactivada para simplificar el desarrollo.
+  - La seguridad del servidor(AUTH) fue desactivada para simplificar el desarrollo.
 
 ### 3.3. Flujo del pipeline
 
-Inicio:
-    Se conecta a Elasticsearch.
-    Verifica si el índice steam_deals existe.
-    Si no existe, lo crea con el esquema definido.
+*Inicio:*
 
-Procesamiento de cada item:
-    Extrae los datos del juego.
-    Indexa un documento en el índice steam_deals con los datos extraídos.
+- Se conecta a Elasticsearch.
+- Verifica si el índice steam_deals existe.
+- Si no existe, lo crea con el esquema definido.
 
-Finalización:
-    Cuando se completa el scraping, el pipeline cierra cualquier recurso abierto (aunque en este caso no se realiza ninguna acción en close_spider).
+*Procesamiento de cada item:*
+
+- Extrae los datos del juego.
+- Indexa un documento en el índice steam_deals con los datos extraídos.
+
+*Finalización:*
+
+- Cuando se completa el scraping, el pipeline cierra cualquier recurso abierto (aunque en este caso no se realiza ninguna acción en close_spider).
 
 ---
 
@@ -156,14 +160,14 @@ En el frontend, se utilizó la librería **Search UI** de Elastic para implement
 1. **Visualización de ofertas:**
    - Los datos se muestran de manera estructurada en tarjetas que incluyen imágenes, precios y descuentos.
 
-2. **Búsqueda avanzada:**
-   - Se permite filtrar juegos por precio, porcentaje de descuento y popularidad.
+2. **Búsqueda simple:**
+   - Se permite filtrar juegos por el título.
 
-3. **Recomendaciones:**
-   - Implementación de un sistema para sugerir juegos similares basados en el título y la categoría.
+3. **Búsqueda avanzada:**
+   - Se permite filtrar juegos por precio, año de lanzamiento, porcentaje de descuento y popularidad.
 
 4. **Clustering de resultados:**
-   - Los juegos son agrupados por rangos de precio y porcentaje de descuento.
+   - Los juegos son agrupados por rangos de precio y porcentaje de descuento. Esto se coonsigue mediante los Facets del frontend.
 
 ### 4.2. Conexión con Elasticsearch
 
@@ -175,24 +179,20 @@ Se definió un objeto de configuración para personalizar el comportamiento de l
 
 - **Campos de búsqueda**: Se configuró el campo `title` como el principal para realizar consultas.
 - **Campos de resultados**: Se seleccionaron los campos más relevantes del índice (`title`, `release_year`, `discount_pct`, entre otros) para ser mostrados en los resultados.
-- **Facetas**: Se añadieron filtros interactivos para que el usuario pueda refinar los resultados por:
+- **Facets**: Se añadieron filtros interactivos para que el usuario pueda refinar los resultados por:
   - Año de lanzamiento (`release_year`).
   - Porcentaje de descuento (`discount_pct`).
   - Porcentaje de reviews positivas (`positive_review_pct`).
   - Precio final (`final_price`), configurado como un filtro por rangos.
 
-### 4.5. Facetas y Rangos
+### 4.5. Facets y Rangos
 
-El filtro por precios incluye varios rangos definidos manualmente, como `<10€`, `10€ - 20€` o `>100€`. Esto permite una experiencia de búsqueda más intuitiva y centrada en los intereses del usuario.
-
-### 4.6. Experiencia del Usuario
-
-La búsqueda está configurada para ejecutarse automáticamente al cargar la página (`alwaysSearchOnInitialLoad`) y utiliza notificaciones de accesibilidad (`hasA11yNotifications`) para garantizar una experiencia inclusiva.
-
-Esta configuración permite al usuario buscar juegos con descuentos, filtrar por categorías clave y explorar ofertas de Steam de manera rápida y eficiente.
+El filtro por precios incluye varios rangos definidos manualmente, como `<10€`, `10€ - 20€` o `>100€`.
 
 ---
 
 ## **5. Conclusión**
 
-Este proyecto combina técnicas de scraping web avanzadas con herramientas modernas como Elasticsearch y React para construir un sistema robusto de extracción, almacenamiento y visualización de datos.
+Este proyecto muestra lo fácil que es crear un buscador eficiente usando herramientas que se comunican de manera sencilla entre ellas. Al integrar Scrapy para el scraping, Elasticsearch para almacenar y consultar los datos, y React para el frontend, se logró construir una aplicación funcional que permite explorar las ofertas de Steam de forma rápida y dinámica. La configuración de los filtros y la visualización de resultados fueron tareas simples gracias a las herramientas que se usaron.
+
+Además, las herramientas utilizadas en el proyecto ofrecen muchas más posibilidades que las que se han implementado. Elasticsearch, por ejemplo, permite realizar filtros mucho más específicos y complejos, lo que puede mejorar la precisión de las búsquedas. Asimismo, la integración de facets y rangos puede extenderse para incluir más tipos de filtros y agrupaciones, lo que optimiza la experiencia del usuario. Al aprovechar todas las capacidades de estas herramientas, se pueden obtener búsquedas aún más rápidas y eficientes, con resultados mucho más relevantes y personalizados para cada usuario.
