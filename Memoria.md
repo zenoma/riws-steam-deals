@@ -4,6 +4,7 @@
 
 - **Jesús Senra Paz** - <jesus.senra@udc.es>  
 - **Adrián García Vázquez** - <adrian.gvazquez@udc.es>
+- [Enlace repositorio](https://github.com/zenoma/riws-steam-deals)
 
 # Memoria del Proyecto
 
